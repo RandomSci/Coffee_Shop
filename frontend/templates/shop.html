@@ -1,0 +1,194 @@
+{% extends "base.html" %}
+
+{% block title %}Shop - AJ's Coffee Buster{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<section class="page-header bg-light py-4">
+    <div class="container">
+        <h1 class="mb-0">{{ category_name }}</h1>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb bg-transparent p-0">
+                <li class="breadcrumb-item"><a href="{{ url_for('routes.index') }}">Home</a></li>
+                <li class="breadcrumb-item active">Shop</li>
+                {% if current_category %}
+                    <li class="breadcrumb-item active">{{ category_name }}</li>
+                {% endif %}
+            </ol>
+        </nav>
+    </div>
+</section>
+
+<!-- Shop Content -->
+<section class="py-5">
+    <div class="container">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-lg-3 mb-4">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">Categories</h5>
+                    </div>
+                    <div class="list-group list-group-flush">
+                        <a href="{{ url_for('routes.shop') }}" class="list-group-item list-group-item-action {% if not current_category %}active{% endif %}">
+                            All Products
+                        </a>
+                        {% for category in categories %}
+                            <a href="{{ url_for('routes.shop', category=category.category_id) }}" class="list-group-item list-group-item-action {% if current_category and current_category|int == category.category_id %}active{% endif %}">
+                                {{ category.name }}
+                            </a>
+                        {% endfor %}
+                    </div>
+                </div>
+                
+                <!-- Search Box -->
+                <div class="card mt-4">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">Search</h5>
+                    </div>
+                    <div class="card-body">
+                        <form action="{{ url_for('routes.shop') }}" method="get">
+                            <div class="input-group">
+                                <input type="text" class="form-control" name="search" placeholder="Search products..." value="{{ search_query or '' }}">
+                                <div class="input-group-append">
+                                    <button class="btn btn-primary" type="submit">
+                                        <i class="fas fa-search"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                
+                <!-- Sort By -->
+                <div class="card mt-4">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">Sort By</h5>
+                    </div>
+                    <div class="list-group list-group-flush">
+                        <a href="{{ url_for('routes.shop', category=current_category, search=search_query, sort='name', order='ASC') }}" class="list-group-item list-group-item-action {% if sort_by == 'name' and sort_order == 'ASC' %}active{% endif %}">
+                            Name (A-Z)
+                        </a>
+                        <a href="{{ url_for('routes.shop', category=current_category, search=search_query, sort='name', order='DESC') }}" class="list-group-item list-group-item-action {% if sort_by == 'name' and sort_order == 'DESC' %}active{% endif %}">
+                            Name (Z-A)
+                        </a>
+                        <a href="{{ url_for('routes.shop', category=current_category, search=search_query, sort='price', order='ASC') }}" class="list-group-item list-group-item-action {% if sort_by == 'price' and sort_order == 'ASC' %}active{% endif %}">
+                            Price (Low to High)
+                        </a>
+                        <a href="{{ url_for('routes.shop', category=current_category, search=search_query, sort='price', order='DESC') }}" class="list-group-item list-group-item-action {% if sort_by == 'price' and sort_order == 'DESC' %}active{% endif %}">
+                            Price (High to Low)
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Products Grid -->
+            <div class="col-lg-9">
+                {% if products|length == 0 %}
+                    <div class="alert alert-info">
+                        No products found in this category.
+                    </div>
+                {% else %}
+                    <div class="row">
+                        {% for product in products %}
+                            <div class="col-md-4 mb-4">
+                                <div class="card h-100 product-card">
+                                    <a href="{{ url_for('routes.product_detail', product_id=product.product_id) }}">
+                                        <img src="{{ product.image_url }}" class="card-img-top" alt="{{ product.name }}">
+                                    </a>
+                                    <div class="card-body">
+                                        <h5 class="card-title">
+                                            <a href="{{ url_for('routes.product_detail', product_id=product.product_id) }}" class="text-dark text-decoration-none">
+                                                {{ product.name }}
+                                            </a>
+                                        </h5>
+                                        <p class="card-text text-muted">{{ product.category_name }}</p>
+                                        <p class="card-text font-weight-bold">{{ product.formatted_price }}</p>
+                                    </div>
+                                    <div class="card-footer bg-white border-top-0">
+                                        <form action="{{ url_for('routes.add_to_cart') }}" method="post">
+                                            <input type="hidden" name="product_id" value="{{ product.product_id }}">
+                                            <input type="hidden" name="quantity" value="1">
+                                            <input type="hidden" name="redirect_url" value="{{ url_for('routes.shop', category=current_category) }}">
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <a href="{{ url_for('routes.product_detail', product_id=product.product_id) }}" class="btn btn-outline-secondary btn-sm">Details</a>
+                                                <button type="submit" class="btn btn-primary">Add to Cart</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    
+                    <!-- Pagination -->
+                    {% if pagination.total_pages > 1 %}
+                        <nav aria-label="Page navigation" class="mt-4">
+                            <ul class="pagination justify-content-center">
+                                {% if pagination.has_prev %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="{{ url_for('routes.shop', category=current_category, search=search_query, sort=sort_by, order=sort_order, page=pagination.page-1) }}">
+                                            Previous
+                                        </a>
+                                    </li>
+                                {% else %}
+                                    <li class="page-item disabled">
+                                        <a class="page-link" href="#" tabindex="-1">Previous</a>
+                                    </li>
+                                {% endif %}
+                                
+                                {% for page_num in range(1, pagination.total_pages + 1) %}
+                                    <li class="page-item {% if page_num == pagination.page %}active{% endif %}">
+                                        <a class="page-link" href="{{ url_for('routes.shop', category=current_category, search=search_query, sort=sort_by, order=sort_order, page=page_num) }}">
+                                            {{ page_num }}
+                                        </a>
+                                    </li>
+                                {% endfor %}
+                                
+                                {% if pagination.has_next %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="{{ url_for('routes.shop', category=current_category, search=search_query, sort=sort_by, order=sort_order, page=pagination.page+1) }}">
+                                            Next
+                                        </a>
+                                    </li>
+                                {% else %}
+                                    <li class="page-item disabled">
+                                        <a class="page-link" href="#" tabindex="-1">Next</a>
+                                    </li>
+                                {% endif %}
+                            </ul>
+                        </nav>
+                    {% endif %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .product-card {
+        transition: transform 0.3s;
+    }
+    
+    .product-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    }
+    
+    .card-img-top {
+        height: 200px;
+        object-fit: cover;
+    }
+    
+    .page-header {
+        background-color: #f8f9fa;
+        border-bottom: 1px solid #e9ecef;
+    }
+    
+    .breadcrumb {
+        margin-bottom: 0;
+    }
+</style>
+{% endblock %}

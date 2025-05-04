@@ -1,0 +1,210 @@
+{% extends "base.html" %}
+
+{% block title %}{{ product.name }} - AJ's Coffee Buster{% endblock %}
+
+{% block content %}
+<section class="page-header bg-light py-4">
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb bg-transparent p-0">
+                <li class="breadcrumb-item"><a href="{{ url_for('routes.index') }}">Home</a></li>
+                <li class="breadcrumb-item"><a href="{{ url_for('routes.shop') }}">Shop</a></li>
+                <li class="breadcrumb-item"><a href="{{ url_for('routes.shop', category=product.category_id) }}">{{ product.category_name }}</a></li>
+                <li class="breadcrumb-item active">{{ product.name }}</li>
+            </ol>
+        </nav>
+    </div>
+</section>
+
+<!-- Product Detail -->
+<section class="py-5">
+    <div class="container">
+        <div class="row">
+            <!-- Product Image -->
+            <div class="col-md-6 mb-4">
+                <div class="product-image-container">
+                    <img src="{{ product.image_url }}" alt="{{ product.name }}" class="img-fluid rounded shadow product-image">
+                </div>
+            </div>
+            
+            <!-- Product Info -->
+            <div class="col-md-6">
+                <h1 class="mb-2">{{ product.name }}</h1>
+                <p class="text-muted mb-3">{{ product.category_name }}</p>
+                <h2 class="mb-4">{{ product.formatted_price }}</h2>
+                <p class="mb-4">{{ product.description }}</p>
+                
+                <form action="{{ url_for('routes.add_to_cart') }}" method="post">
+                    <input type="hidden" name="product_id" value="{{ product.product_id }}">
+                    <input type="hidden" name="redirect_url" value="{{ url_for('routes.product_detail', product_id=product.product_id) }}">
+                    <div class="form-group">
+                        <label for="quantity">Quantity</label>
+                        <div class="d-flex align-items-center">
+                            <div class="input-group quantity-selector">
+                                <div class="input-group-prepend">
+                                    <button type="button" class="btn btn-outline-secondary btn-sm quantity-down">
+                                        <i class="fas fa-minus"></i>
+                                    </button>
+                                </div>
+                                <input type="number" class="form-control text-center" id="quantity" name="quantity" value="1" min="1" max="10">
+                                <div class="input-group-append">
+                                    <button type="button" class="btn btn-outline-secondary btn-sm quantity-up">
+                                        <i class="fas fa-plus"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-lg mt-3">
+                        <i class="fas fa-shopping-cart mr-2"></i> Add to Cart
+                    </button>
+                </form>
+                
+                <hr class="my-4">
+                
+                <div class="product-meta">
+                    {% if product.in_stock %}
+                    <div class="d-flex align-items-center mb-2">
+                        <span class="mr-2"><i class="fas fa-check-circle text-success"></i></span>
+                        <span>In Stock</span>
+                    </div>
+                    {% else %}
+                    <div class="d-flex align-items-center mb-2">
+                        <span class="mr-2"><i class="fas fa-times-circle text-danger"></i></span>
+                        <span>Out of Stock</span>
+                    </div>
+                    {% endif %}
+                    <div class="d-flex align-items-center mb-2">
+                        <span class="mr-2"><i class="fas fa-truck"></i></span>
+                        <span>Free shipping on orders over $50</span>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <span class="mr-2"><i class="fas fa-undo"></i></span>
+                        <span>30-day return policy</span>
+                    </div>
+                </div>
+                
+                <div class="share-buttons mt-4">
+                    <span class="mr-2">Share:</span>
+                    <a href="#" class="text-dark mr-2"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="text-dark mr-2"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="text-dark mr-2"><i class="fab fa-pinterest"></i></a>
+                    <a href="#" class="text-dark"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Product Details Tabs -->
+        <div class="row mt-5">
+            <div class="col-12">
+                <ul class="nav nav-tabs" id="productTabs" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="description-tab" data-toggle="tab" href="#description" role="tab">Description</a>
+                    </li>
+                </ul>
+                <div class="tab-content p-4 border border-top-0 rounded-bottom" id="productTabsContent">
+                    <div class="tab-pane fade show active" id="description" role="tabpanel">
+                        <h4>Product Description</h4>
+                        <p>{{ product.description }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        {% if related_products %}
+            <div class="related-products mt-5">
+                <h3 class="mb-4">You May Also Like</h3>
+                <div class="row">
+                    {% for related in related_products %}
+                        <div class="col-md-3 mb-4">
+                            <div class="card h-100 product-card">
+                                <a href="{{ url_for('routes.product_detail', product_id=related.product_id) }}">
+                                    <img src="{{ related.image_url }}" class="card-img-top" alt="{{ related.name }}">
+                                </a>
+                                <div class="card-body">
+                                    <h5 class="card-title">
+                                        <a href="{{ url_for('routes.product_detail', product_id=related.product_id) }}" class="text-dark text-decoration-none">
+                                            {{ related.name }}
+                                        </a>
+                                    </h5>
+                                    <p class="card-text text-muted">{{ related.category_name }}</p>
+                                    <p class="card-text font-weight-bold">{{ related.formatted_price }}</p>
+                                </div>
+                                <div class="card-footer bg-white border-top-0">
+                                    <form action="{{ url_for('routes.add_to_cart') }}" method="post">
+                                        <input type="hidden" name="product_id" value="{{ related.product_id }}">
+                                        <input type="hidden" name="quantity" value="1">
+                                        <input type="hidden" name="redirect_url" value="{{ url_for('routes.product_detail', product_id=product.product_id) }}">
+                                        <button type="submit" class="btn btn-primary btn-block">Add to Cart</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .product-image-container {
+        position: relative;
+        overflow: hidden;
+        border-radius: 5px;
+    }
+    
+    .product-image {
+        transition: transform 0.5s;
+    }
+    
+    .product-image:hover {
+        transform: scale(1.05);
+    }
+    
+    .quantity-selector {
+        width: 120px;
+    }
+    
+    .product-card {
+        transition: transform 0.3s;
+    }
+    
+    .product-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    }
+    
+    .card-img-top {
+        height: 180px;
+        object-fit: cover;
+    }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    $(document).ready(function() {
+        $('.quantity-up').click(function() {
+            var input = $(this).closest('.quantity-selector').find('input');
+            var value = parseInt(input.val());
+            var max = parseInt(input.attr('max'));
+            
+            if (value < max) {
+                input.val(value + 1);
+            }
+        });
+        
+        $('.quantity-down').click(function() {
+            var input = $(this).closest('.quantity-selector').find('input');
+            var value = parseInt(input.val());
+            
+            if (value > 1) {
+                input.val(value - 1);
+            }
+        });
+    });
+</script>
+{% endblock %}

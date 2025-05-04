@@ -1,0 +1,65 @@
+<!-- order_details_partial.html -->
+<div class="order-details">
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <h5>Order Information</h5>
+            <p><strong>Order Number:</strong> {{ order.order_number }}</p>
+            <p><strong>Date:</strong> {{ order.formatted_date }}</p>
+            <p><strong>Status:</strong> <span class="badge {{ order.status_class }}">{{ order.status|capitalize }}</span></p>
+            <p><strong>Payment Method:</strong> {{ order.payment_method }}</p>
+        </div>
+        <div class="col-md-6">
+            <h5>Shipping Address</h5>
+            <p>
+                {{ order.customer_name }}<br>
+                {{ order.shipping_address }}
+            </p>
+        </div>
+    </div>
+    <h5>Order Items</h5>
+    <div class="table-responsive">
+        <table class="table table-bordered">
+            <thead class="bg-light">
+                <tr>
+                    <th>Product</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in order_items %}
+                <tr>
+                    <td>
+                        {% if item.image_url %}
+                        <div class="d-flex align-items-center">
+                            <img src="{{ item.image_url }}" alt="{{ item.product_name }}" class="img-thumbnail mr-3" style="width: 50px;">
+                            <span>{{ item.product_name }}</span>
+                        </div>
+                        {% else %}
+                        {{ item.product_name }}
+                        {% endif %}
+                    </td>
+                    <td>{{ item.formatted_price }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>{{ item.formatted_subtotal }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="3" class="text-right"><strong>Subtotal</strong></td>
+                    <td>{{ format_currency(subtotal) }}</td>
+                </tr>
+                <tr>
+                    <td colspan="3" class="text-right"><strong>Tax (7%)</strong></td>
+                    <td>{{ format_currency(tax) }}</td>
+                </tr>
+                <tr>
+                    <td colspan="3" class="text-right"><strong>Total</strong></td>
+                    <td><strong>{{ order.formatted_total }}</strong></td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>

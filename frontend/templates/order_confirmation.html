@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+
+{% block title %}Order Confirmation - AJ's Coffee Buster{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<section class="page-header bg-light py-4">
+    <div class="container">
+        <h1 class="mb-0">Order Confirmation</h1>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb bg-transparent p-0">
+                <li class="breadcrumb-item"><a href="{{ url_for('routes.index') }}">Home</a></li>
+                <li class="breadcrumb-item active">Order Confirmation</li>
+            </ol>
+        </nav>
+    </div>
+</section>
+
+<!-- Confirmation Content -->
+<section class="py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card">
+                    <div class="card-body text-center py-5">
+                        <div class="mb-4">
+                            <div class="confirmation-icon">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                        </div>
+                        <h2 class="mb-3">Thank You for Your Order!</h2>
+                        <p class="lead mb-4">Your order has been received and is being processed.</p>
+                        <p class="text-muted mb-5">Order #{{ order.order_number }}</p>
+                        <div class="row mb-4">
+                            <div class="col-md-6 mb-3 mb-md-0">
+                                <div class="card h-100">
+                                    <div class="card-body">
+                                        <h5 class="mb-3">Order Details</h5>
+                                        <p class="mb-1"><strong>Date:</strong> {{ order.formatted_date }}</p>
+                                        <p class="mb-1"><strong>Payment Method:</strong> {{ order.payment_method }}</p>
+                                        <p class="mb-0"><strong>Total:</strong> {{ order.formatted_total }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card h-100">
+                                    <div class="card-body">
+                                        <h5 class="mb-3">Shipping Address</h5>
+                                        <p class="mb-0">
+                                            {{ order.customer_name }}<br>
+                                            {{ order.shipping_address }}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="mb-4">You will receive a confirmation email shortly with the details of your order.</p>
+                        <div class="d-flex justify-content-center flex-wrap">
+                            <a href="{{ url_for('routes.shop') }}" class="btn btn-primary m-2">
+                                Continue Shopping
+                            </a>
+                            <a href="{{ url_for('routes.orders') }}" class="btn btn-outline-primary m-2">
+                                View Your Orders
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Recommended Products -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <h3 class="mb-4 text-center">You Might Also Like</h3>
+        <div class="row">
+            {% for product in recommended_products %}
+                <div class="col-md-3 mb-4">
+                    <div class="card h-100 product-card">
+                        <a href="{{ url_for('routes.product_detail', product_id=product.product_id) }}">
+                            <img src="{{ product.image_url }}" class="card-img-top" alt="{{ product.name }}">
+                        </a>
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <a href="{{ url_for('routes.product_detail', product_id=product.product_id) }}" class="text-dark text-decoration-none">
+                                    {{ product.name }}
+                                </a>
+                            </h5>
+                            <p class="card-text text-muted">{{ product.category_name }}</p>
+                            <p class="card-text font-weight-bold">{{ product.formatted_price }}</p>
+                        </div>
+                        <div class="card-footer bg-white border-top-0">
+                            <form action="{{ url_for('routes.add_to_cart') }}" method="post">
+                                <input type="hidden" name="product_id" value="{{ product.product_id }}">
+                                <input type="hidden" name="quantity" value="1">
+                                <input type="hidden" name="redirect_url" value="{{ url_for('routes.order_confirmation') }}">
+                                <button type="submit" class="btn btn-primary btn-block">Add to Cart</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .confirmation-icon {
+        font-size: 5rem;
+        color: #28a745;
+        margin-bottom: 1rem;
+    }
+    
+    .product-card {
+        transition: transform 0.3s;
+    }
+    
+    .product-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    }
+    
+    .card-img-top {
+        height: 180px;
+        object-fit: cover;
+    }
+    
+    .page-header {
+        background-color: #f8f9fa;
+        border-bottom: 1px solid #e9ecef;
+    }
+    
+    .breadcrumb {
+        margin-bottom: 0;
+    }
+</style>
+{% endblock %}

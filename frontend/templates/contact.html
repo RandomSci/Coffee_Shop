@@ -1,0 +1,151 @@
+{% extends "base.html" %}
+
+{% block title %}Contact Us - AJ's Coffee Buster{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<section class="page-header bg-light py-4">
+    <div class="container">
+        <h1 class="mb-0">Contact Us</h1>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb bg-transparent p-0">
+                <li class="breadcrumb-item"><a href="{{ url_for('routes.index') }}">Home</a></li>
+                <li class="breadcrumb-item active">Contact</li>
+            </ol>
+        </nav>
+    </div>
+</section>
+
+<!-- Contact Content -->
+<section class="py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-7 mb-4 mb-lg-0">
+                <div class="card border-0 shadow">
+                    <div class="card-header bg-primary text-white">
+                        <h4 class="mb-0">Send Us a Message</h4>
+                    </div>
+                    <div class="card-body p-4">
+                        {% with messages = get_flashed_messages(with_categories=true) %}
+                            {% if messages %}
+                                {% for category, message in messages %}
+                                    <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                                        {{ message }}
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+                        {% endwith %}
+
+                        <form action="{{ url_for('routes.contact') }}" method="POST">
+                            <div class="form-group">
+                                <label for="name">Your Name</label>
+                                <input type="text" class="form-control" id="name" name="name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email Address</label>
+                                <input type="email" class="form-control" id="email" name="email" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="subject">Subject</label>
+                                <input type="text" class="form-control" id="subject" name="subject" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="message">Message</label>
+                                <textarea class="form-control" id="message" name="message" rows="5" required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-lg">Send Message</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-5">
+                <div class="card border-0 shadow mb-4">
+                    <div class="card-header bg-primary text-white">
+                        <h4 class="mb-0">Contact Information</h4>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="d-flex align-items-center mb-3">
+                            <i class="fas fa-map-marker-alt text-primary fa-2x mr-3"></i>
+                            <div>
+                                <h5 class="mb-0">Address</h5>
+                                <p class="mb-0">123 Coffee Street, Cebu City, Philippines</p>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center mb-3">
+                            <i class="fas fa-phone text-primary fa-2x mr-3"></i>
+                            <div>
+                                <h5 class="mb-0">Phone</h5>
+                                <p class="mb-0">+63 1234 567 890</p>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center mb-3">
+                            <i class="fas fa-envelope text-primary fa-2x mr-3"></i>
+                            <div>
+                                <h5 class="mb-0">Email</h5>
+                                <p class="mb-0">info@ajcoffeebuster.com</p>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-clock text-primary fa-2x mr-3"></i>
+                            <div>
+                                <h5 class="mb-0">Business Hours</h5>
+                                <p class="mb-0">Monday - Sunday: 7:00 AM - 10:00 PM</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card border-0 shadow">
+                    <div class="card-header bg-primary text-white">
+                        <h4 class="mb-0">Follow Us</h4>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="social-links d-flex justify-content-around">
+                            <a href="#" class="text-primary"><i class="fab fa-facebook-f fa-2x"></i></a>
+                            <a href="#" class="text-primary"><i class="fab fa-twitter fa-2x"></i></a>
+                            <a href="#" class="text-primary"><i class="fab fa-instagram fa-2x"></i></a>
+                            <a href="#" class="text-primary"><i class="fab fa-linkedin-in fa-2x"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Map Section (optional) -->
+<section class="mb-5">
+    <div class="container">
+        <div class="card border-0 shadow">
+            <div class="card-body p-0">
+                <div class="embed-responsive embed-responsive-21by9">
+                    <iframe class="embed-responsive-item" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3925.0091001094046!2d123.8910!3d10.3124!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTDCsDE4JzQ0LjYiTiAxMjPCsDUzJzI3LjYiRQ!5e0!3m2!1sen!2sus!4v1588782000000!5m2!1sen!2sus" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .page-header {
+        background-color: #f8f9fa;
+        border-bottom: 1px solid #e9ecef;
+    }
+    
+    .breadcrumb {
+        margin-bottom: 0;
+    }
+    
+    .social-links a {
+        transition: all 0.3s ease;
+    }
+    
+    .social-links a:hover {
+        transform: translateY(-5px);
+    }
+</style>
+{% endblock %}

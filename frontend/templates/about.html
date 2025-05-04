@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+
+{% block title %}About Us - AJ's Coffee Buster{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<section class="page-header bg-light py-4">
+    <div class="container">
+        <h1 class="mb-0">About Us</h1>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb bg-transparent p-0">
+                <li class="breadcrumb-item"><a href="{{ url_for('routes.index') }}">Home</a></li>
+                <li class="breadcrumb-item active">About Us</li>
+            </ol>
+        </nav>
+    </div>
+</section>
+
+<!-- About Content -->
+<section class="py-5">
+    <div class="container">
+        <!-- Our Story -->
+        <div class="row align-items-center mb-5">
+            <div class="col-lg-6 mb-4 mb-lg-0">
+                <img src="{{ url_for('static', filename='images/our-story.jpg') }}" alt="Our Story" class="img-fluid rounded shadow">
+            </div>
+            <div class="col-lg-6">
+                <h2>Our Story</h2>
+                <p class="lead">Crafting the perfect coffee experience since 2010</p>
+                <p>AJ's Coffee Buster was born from a simple passion – to create the perfect cup of coffee. Founded by AJ Rivera in 2010, our humble beginnings started as a small coffee cart in the bustling streets of Cebu City.</p>
+                <p>What began as a one-man operation has now grown into a beloved coffee destination with a loyal community of coffee enthusiasts. Despite our growth, our commitment to quality and craftsmanship remains unchanged.</p>
+                <p>Every cup we serve is a testament to our dedication to the art of coffee making, from carefully sourcing the finest beans to the meticulous brewing process performed by our skilled baristas.</p>
+            </div>
+        </div>
+        
+        <!-- Our Mission -->
+        <div class="row align-items-center mb-5 flex-lg-row-reverse">
+            <div class="col-lg-6 mb-4 mb-lg-0">
+                <img src="{{ url_for('static', filename='images/our-mission.jpg') }}" alt="Our Mission" class="img-fluid rounded shadow">
+            </div>
+            <div class="col-lg-6">
+                <h2>Our Mission</h2>
+                <p class="lead">Creating meaningful connections through coffee</p>
+                <p>At AJ's Coffee Buster, our mission extends beyond serving exceptional coffee. We believe in creating a warm, welcoming space where people can connect, create, and collaborate.</p>
+                <p>We're committed to sustainability and ethical sourcing, working directly with farmers to ensure fair prices and environmentally responsible practices. By supporting local communities and minimizing our environmental footprint, we strive to make a positive impact.</p>
+                <p>Our goal is simple: to enhance your day with the perfect cup of coffee, served with a smile in an atmosphere that feels like home.</p>
+            </div>
+        </div>
+        
+        <!-- Our Coffee -->
+        <div class="row align-items-center mb-5">
+            <div class="col-lg-6 mb-4 mb-lg-0">
+                <img src="{{ url_for('static', filename='images/our-coffee.jpg') }}" alt="Our Coffee" class="img-fluid rounded shadow">
+            </div>
+            <div class="col-lg-6">
+                <h2>Our Coffee</h2>
+                <p class="lead">Quality in every cup, from bean to brew</p>
+                <p>The journey of our coffee begins with careful selection of beans from the world's finest growing regions, including Ethiopia, Colombia, Brazil, and Indonesia. We work directly with farmers who share our passion for quality and sustainability.</p>
+                <p>Our master roaster brings out the unique character of each bean through a precise roasting process, developing complex flavors while preserving the natural qualities of the coffee. We roast in small batches to ensure freshness and consistency.</p>
+                <p>From classic espresso to innovative specialty drinks, every beverage on our menu is crafted with precision and care by our skilled baristas, who undergo rigorous training to master their craft.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Call to Action -->
+<section class="py-5 bg-primary text-white">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8 text-center">
+                <h2>Join the AJ's Coffee Buster Family</h2>
+                <p class="lead mb-4">Experience the difference of our premium coffee today</p>
+                <div class="d-flex justify-content-center">
+                    <a href="{{ url_for('routes.shop') }}" class="btn btn-light btn-lg mr-3">Shop Now</a>
+                    <a href="{{ url_for('routes.contact') }}" class="btn btn-outline-light btn-lg">Contact Us</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .page-header {
+        background-color: #f8f9fa;
+        border-bottom: 1px solid #e9ecef;
+    }
+    
+    .breadcrumb {
+        margin-bottom: 0;
+    }
+</style>
+{% endblock %}
+

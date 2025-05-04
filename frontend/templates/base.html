@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}AJ's Coffee Buster{% endblock %}</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="container">
+                <a class="navbar-brand" href="{{ url_for('routes.index') }}">
+                    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="AJ's Coffee" width="40" height="40" class="d-inline-block align-top">
+                    AJ's Coffee Buster
+                </a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item {% if request.path == url_for('routes.index') %}active{% endif %}">
+                            <a class="nav-link" href="{{ url_for('routes.index') }}">HOME</a>
+                        </li>
+                        <li class="nav-item {% if request.path == url_for('routes.shop') %}active{% endif %}">
+                            <a class="nav-link" href="{{ url_for('routes.shop') }}">SHOP</a>
+                        </li>
+                        <li class="nav-item {% if request.path == url_for('routes.orders') %}active{% endif %}">
+                            <a class="nav-link" href="{{ url_for('routes.orders') }}">ORDERS</a>
+                        </li>
+                        <li class="nav-item {% if request.path == url_for('routes.about') %}active{% endif %}">
+                            <a class="nav-link" href="{{ url_for('routes.about') }}">ABOUT</a>
+                        </li>
+                        <li class="nav-item {% if request.path == url_for('routes.contact') %}active{% endif %}">
+                            <a class="nav-link" href="{{ url_for('routes.contact') }}">CONTACT</a>
+                        </li>
+                    </ul>
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('routes.cart') }}">
+                                <i class="fas fa-shopping-cart"></i> 
+                                <span class="badge badge-pill badge-primary cart-count">
+                                    {% if session.cart %}
+                                        {{ session.cart|sum(attribute='quantity') }}
+                                    {% else %}
+                                        0
+                                    {% endif %}
+                                </span>
+                            </a>
+                        </li>
+                        {% if session.user_id %}
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown">
+                                    <i class="fas fa-user"></i> {{ session.user_name }}
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right">
+                                    <a class="dropdown-item" href="{{ url_for('routes.profile') }}">
+                                        <i class="fas fa-user-circle mr-2"></i> Profile
+                                    </a>
+                                    <a class="dropdown-item" href="{{ url_for('routes.orders') }}">
+                                        <i class="fas fa-shopping-bag mr-2"></i> My Orders
+                                    </a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="{{ url_for('routes.logout') }}">
+                                        <i class="fas fa-sign-out-alt mr-2"></i> Logout
+                                    </a>
+                                </div>
+                            </li>
+                        {% else %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('routes.login') }}">
+                                    <i class="fas fa-sign-in-alt mr-1"></i> Login
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('routes.register') }}">
+                                    <i class="fas fa-user-plus mr-1"></i> Register
+                                </a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="container mt-3">
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} alert-dismissible fade show">
+                        {{ message }}
+                        <button type="button" class="close" data-dismiss="alert">
+                            <span>&times;</span>
+                        </button>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="bg-dark text-white pt-5 pb-4 mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-3 mb-4">
+                    <h5>AJ's Coffee Buster</h5>
+                    <p>Cherish your Coffee moments with us. We provide the best coffee experience in town.</p>
+                    <div class="social-icons">
+                        <a href="#" class="text-white mr-3"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="text-white mr-3"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-white mr-3"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <h5>Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="{{ url_for('routes.index') }}" class="text-white">Home</a></li>
+                        <li><a href="{{ url_for('routes.shop') }}" class="text-white">Shop</a></li>
+                        <li><a href="{{ url_for('routes.about') }}" class="text-white">About Us</a></li>
+                        <li><a href="{{ url_for('routes.contact') }}" class="text-white">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <h5>Contact Info</h5>
+                    <ul class="list-unstyled">
+                        <li><i class="fas fa-map-marker-alt mr-2"></i> 123 Coffee Street, Cebu City</li>
+                        <li><i class="fas fa-phone mr-2"></i> +63 912 345 6789</li>
+                        <li><i class="fas fa-envelope mr-2"></i> info@ajscoffee.com</li>
+                    </ul>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <h5>Opening Hours</h5>
+                    <ul class="list-unstyled">
+                        <li>Monday - Friday: 7:00 AM - 10:00 PM</li>
+                        <li>Saturday: 8:00 AM - 11:00 PM</li>
+                        <li>Sunday: 8:00 AM - 9:00 PM</li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="bg-light">
+            <div class="text-center">
+                <p class="mb-0">&copy; 2025 AJ's Coffee Buster. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

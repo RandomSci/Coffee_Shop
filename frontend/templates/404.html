@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}404 - Page Not Found - AJ's Coffee Buster{% endblock %}
+
+{% block content %}
+<section class="py-5 text-center">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="error-page py-5">
+                    <h1 class="error-code">404</h1>
+                    <div class="error-icon mb-4">
+                        <i class="fas fa-coffee"></i>
+                    </div>
+                    <h2 class="mb-4">Oops! Page Not Found</h2>
+                    <p class="lead mb-5">We can't seem to find the page you're looking for. It might have been moved, deleted, or perhaps it never existed. But don't worry, our coffee is still here!</p>
+                    <div class="buttons">
+                        <a href="{{ url_for('routes.index') }}" class="btn btn-primary btn-lg mr-3">
+                            <i class="fas fa-home mr-2"></i> Go Home
+                        </a>
+                        <a href="{{ url_for('routes.shop') }}" class="btn btn-outline-primary btn-lg">
+                            <i class="fas fa-shopping-cart mr-2"></i> Shop Now
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .error-code {
+        font-size: 120px;
+        font-weight: 700;
+        color: #8b4513;
+        margin-bottom: 0;
+    }
+    
+    .error-icon {
+        font-size: 5rem;
+        color: #6c757d;
+    }
+    
+    .error-page {
+        padding: 3rem 0;
+    }
+</style>
+{% endblock %}

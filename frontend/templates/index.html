@@ -1,0 +1,190 @@
+{% extends "base.html" %}
+
+{% block title %}AJ's Coffee Buster - Premium Coffee Shop{% endblock %}
+
+{% block content %}
+<!-- Hero Banner -->
+<section class="hero-banner" style="background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('{{ url_for('static', filename='images/banner-bg.jpg') }}');">
+    <div class="container">
+        <div class="row align-items-center min-vh-75">
+            <div class="col-lg-6 text-white">
+                <h1>Cherish your Coffee moments</h1>
+                <h2 class="display-4 font-weight-bold">AJ'S COFFEE BUSTER</h2>
+                <p class="lead">Experience the finest coffee beans, carefully selected and freshly brewed to perfection.</p>
+                <a href="{{ url_for('routes.shop') }}" class="btn btn-primary btn-lg">Order Now</a>
+            </div>
+            <div class="col-lg-6 d-none d-lg-block">
+                <img src="{{ url_for('static', filename='images/coffee-cup.png') }}" alt="Coffee Cup" class="img-fluid splash-img">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Products -->
+<section class="py-5">
+    <div class="container">
+        <h2 class="text-center mb-4">OUR SIGNATURE COFFEES</h2>
+        <div class="row">
+            {% for product in featured_products %}
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 product-card">
+                        <img src="{{ product.image_url }}" class="card-img-top" alt="{{ product.name }}">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ product.name }}</h5>
+                            <p class="card-text text-muted">{{ product.category_name }}</p>
+                            <p class="card-text">{{ product.formatted_price }}</p>
+                        </div>
+                        <div class="card-footer bg-white border-top-0">
+                            <div class="d-flex justify-content-between">
+                                <a href="{{ url_for('routes.product_detail', product_id=product.product_id) }}" class="btn btn-outline-secondary">View Details</a>
+                                <form action="{{ url_for('routes.add_to_cart') }}" method="post">
+                                    <input type="hidden" name="product_id" value="{{ product.product_id }}">
+                                    <input type="hidden" name="quantity" value="1">
+                                    <input type="hidden" name="redirect_url" value="{{ url_for('routes.index') }}">
+                                    <button type="submit" class="btn btn-primary">Add to Cart</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="text-center mt-4">
+            <a href="{{ url_for('routes.shop') }}" class="btn btn-lg btn-outline-primary">View All Products</a>
+        </div>
+    </div>
+</section>
+
+<!-- Coffee Categories -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <h2 class="text-center mb-4">COFFEE BY CATEGORY</h2>
+        <div class="row">
+            {% for category in categories %}
+                <div class="col-6 col-md-4 col-lg-2 mb-4">
+                    <a href="{{ url_for('routes.shop', category=category.category_id) }}" class="text-decoration-none">
+                        <div class="card text-center category-card h-100">
+                            {% if category.image_url %}
+                                <img src="{{ category.image_url }}" class="card-img-top px-4 pt-4" alt="{{ category.name }}">
+                            {% else %}
+                                <div class="card-img-top px-4 pt-4">
+                                    <i class="fas fa-coffee fa-4x my-3 text-primary"></i>
+                                </div>
+                            {% endif %}
+                            <div class="card-body">
+                                <h5 class="card-title">{{ category.name }}</h5>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- About Section -->
+<section class="py-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 mb-4 mb-lg-0">
+                <img src="{{ url_for('static', filename='images/about-coffee.jpg') }}" alt="About Our Coffee" class="img-fluid rounded shadow">
+            </div>
+            <div class="col-lg-6">
+                <h2>ABOUT OUR COFFEE</h2>
+                <p class="lead">Crafting the perfect cup since 2010</p>
+                <p>At AJ's Coffee Buster, we believe that great coffee is an art. We source our beans directly from sustainable farms around the world, ensuring the highest quality and ethical practices.</p>
+                <p>Our master baristas are trained to bring out the unique flavors of each blend, creating a coffee experience that's truly exceptional.</p>
+                <a href="{{ url_for('routes.about') }}" class="btn btn-outline-primary">Learn More</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Newsletter -->
+<section class="py-5 bg-primary text-white">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8 text-center">
+                <h2>JOIN OUR NEWSLETTER</h2>
+                <p class="lead">Stay updated with new flavors, promotions, and coffee tips</p>
+                <form action="{{ url_for('routes.subscribe_newsletter') }}" method="post" class="my-4" id="newsletter-form">
+                    <div class="input-group">
+                        <input type="email" class="form-control" name="email" id="newsletter-email" placeholder="Your email address" required>
+                        <div class="input-group-append">
+                            <button class="btn btn-dark" type="submit">Subscribe</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .hero-banner {
+        background-size: cover;
+        background-position: center;
+        color: white;
+        padding: 100px 0;
+        position: relative;
+    }
+    
+    .splash-img {
+        animation: float 3s ease-in-out infinite;
+    }
+    
+    @keyframes float {
+        0% { transform: translateY(0px); }
+        50% { transform: translateY(-15px); }
+        100% { transform: translateY(0px); }
+    }
+    
+    .category-card:hover {
+        transform: translateY(-5px);
+        transition: transform 0.3s;
+    }
+    
+    .product-card {
+        transition: transform 0.3s;
+    }
+    
+    .product-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    }
+    
+    .min-vh-75 {
+        min-height: 75vh;
+    }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    $(document).ready(function() {
+        $('#newsletter-form').submit(function(e) {
+            e.preventDefault();
+            
+            const email = $('#newsletter-email').val();
+            
+            $.ajax({
+                url: "{{ url_for('routes.subscribe_newsletter') }}",
+                method: 'POST',
+                data: { email: email },
+                success: function(response) {
+                    if (response.success) {
+                        $('#newsletter-form').html('<div class="alert alert-success">' + response.message + '</div>');
+                    } else {
+                        $('#newsletter-form').append('<div class="alert alert-danger mt-2">' + response.error + '</div>');
+                    }
+                },
+                error: function() {
+                    $('#newsletter-form').append('<div class="alert alert-danger mt-2">An error occurred. Please try again.</div>');
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}

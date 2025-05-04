@@ -1,0 +1,319 @@
+{% extends "base.html" %}
+
+{% block title %}Checkout - AJ's Coffee Buster{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<section class="page-header bg-light py-4">
+    <div class="container">
+        <h1 class="mb-0">Checkout</h1>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb bg-transparent p-0">
+                <li class="breadcrumb-item"><a href="{{ url_for('routes.index') }}">Home</a></li>
+                <li class="breadcrumb-item"><a href="{{ url_for('routes.cart') }}">Cart</a></li>
+                <li class="breadcrumb-item active">Checkout</li>
+            </ol>
+        </nav>
+    </div>
+</section>
+
+<!-- Checkout Content -->
+<section class="py-5">
+    <div class="container">
+        <form action="{{ url_for('routes.checkout') }}" method="post" id="checkout-form">
+            <div class="row">
+                <!-- Customer Information -->
+                <div class="col-lg-8">
+                    <div class="card mb-4">
+                        <div class="card-header bg-white">
+                            <h4 class="mb-0">Customer Information</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="name">Full Name *</label>
+                                    <input type="text" class="form-control" id="name" name="name" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="email">Email *</label>
+                                    <input type="email" class="form-control" id="email" name="email" required>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="phone">Phone *</label>
+                                    <input type="tel" class="form-control" id="phone" name="phone" required>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card mb-4">
+                        <div class="card-header bg-white">
+                            <h4 class="mb-0">Shipping Address</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label for="address">Street Address *</label>
+                                <input type="text" class="form-control" id="address" name="address" required>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4 mb-3">
+                                    <label for="city">City *</label>
+                                    <input type="text" class="form-control" id="city" name="city" required>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label for="state">State/Province *</label>
+                                    <input type="text" class="form-control" id="state" name="state" required>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label for="zip">ZIP/Postal Code *</label>
+                                    <input type="text" class="form-control" id="zip" name="zip" required>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="country">Country *</label>
+                                <select class="custom-select" id="country" name="country" required>
+                                    <option value="">Select a country</option>
+                                    <option value="PH" selected>Philippines</option>
+                                    <option value="US">United States</option>
+                                    <option value="CA">Canada</option>
+                                    <option value="AU">Australia</option>
+                                    <option value="UK">United Kingdom</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card mb-4">
+                        <div class="card-header bg-white">
+                            <h4 class="mb-0">Payment Method</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-check mb-3">
+                                <input class="form-check-input" type="radio" name="payment_method" id="payment_cod" value="cod" checked>
+                                <label class="form-check-label" for="payment_cod">
+                                    <i class="fas fa-money-bill-wave mr-2"></i> Cash on Delivery
+                                </label>
+                            </div>
+                            <div class="form-check mb-3">
+                                <input class="form-check-input" type="radio" name="payment_method" id="payment_card" value="card">
+                                <label class="form-check-label" for="payment_card">
+                                    <i class="far fa-credit-card mr-2"></i> Credit/Debit Card
+                                </label>
+                            </div>
+                            <div class="form-check mb-3">
+                                <input class="form-check-input" type="radio" name="payment_method" id="payment_paypal" value="paypal">
+                                <label class="form-check-label" for="payment_paypal">
+                                    <i class="fab fa-paypal mr-2"></i> PayPal
+                                </label>
+                            </div>
+                            
+                            <div id="card_details" class="mt-4" style="display: none;">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="card_name">Name on Card *</label>
+                                        <input type="text" class="form-control" id="card_name" name="card_name">
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="card_number">Card Number *</label>
+                                        <input type="text" class="form-control" id="card_number" name="card_number">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4 mb-3">
+                                        <label for="card_expiry_month">Expiry Month *</label>
+                                        <select class="custom-select" id="card_expiry_month" name="card_expiry_month">
+                                            <option value="">Month</option>
+                                            {% for month in range(1, 13) %}
+                                                <option value="{{ month }}">{{ '%02d' % month }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label for="card_expiry_year">Expiry Year *</label>
+                                        <select class="custom-select" id="card_expiry_year" name="card_expiry_year">
+                                            <option value="">Year</option>
+                                            {% for year in range(2025, 2036) %}
+                                                <option value="{{ year }}">{{ year }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label for="card_cvv">CVV *</label>
+                                        <input type="text" class="form-control" id="card_cvv" name="card_cvv">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card mb-4">
+                        <div class="card-header bg-white">
+                            <h4 class="mb-0">Additional Information</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label for="notes">Order Notes (optional)</label>
+                                <textarea class="form-control" id="notes" name="notes" rows="3" placeholder="Notes about your order, e.g. special delivery instructions"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Order Summary -->
+                <div class="col-lg-4">
+                    <div class="card mb-4">
+                        <div class="card-header bg-white">
+                            <h4 class="mb-0">Order Summary</h4>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table mb-0">
+                                    <tbody>
+                                        {% for item in cart_items %}
+                                            <tr>
+                                                <td class="border-top-0">
+                                                    <div class="d-flex align-items-center">
+                                                        <img src="{{ item.image_url }}" alt="{{ item.name }}" class="checkout-item-image mr-2">
+                                                        <div>
+                                                            <h6 class="mb-0">{{ item.name }}</h6>
+                                                            <small class="text-muted">Qty: {{ item.quantity }}</small>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td class="text-right border-top-0">{{ format_currency(item.subtotal) }}</td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-white">
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>Subtotal</span>
+                                <span>{{ format_currency(cart_totals.subtotal) }}</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>Tax (7%)</span>
+                                <span>{{ format_currency(cart_totals.tax) }}</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-3">
+                                <span>Shipping</span>
+                                <span>Free</span>
+                            </div>
+                            <hr>
+                            <div class="d-flex justify-content-between mb-3">
+                                <strong>Total</strong>
+                                <strong>{{ format_currency(cart_totals.total) }}</strong>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <div class="form-check mb-3">
+                                <input class="form-check-input" type="checkbox" id="agree_terms" name="agree_terms" required>
+                                <label class="form-check-label" for="agree_terms">
+                                    I have read and agree to the website <a href="#">terms and conditions</a> *
+                                </label>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-lg btn-block">
+                                Place Order
+                            </button>
+                            <div class="text-center mt-3">
+                                <a href="{{ url_for('routes.cart') }}" class="text-muted">
+                                    <i class="fas fa-arrow-left mr-2"></i> Return to Cart
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .checkout-item-image {
+        width: 40px;
+        height: 40px;
+        object-fit: cover;
+        border-radius: 4px;
+    }
+    
+    .page-header {
+        background-color: #f8f9fa;
+        border-bottom: 1px solid #e9ecef;
+    }
+    
+    .breadcrumb {
+        margin-bottom: 0;
+    }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    $(document).ready(function() {
+        $('input[name="payment_method"]').change(function() {
+            if ($(this).val() === 'card') {
+                $('#card_details').slideDown();
+            } else {
+                $('#card_details').slideUp();
+            }
+        });
+        
+        $('#checkout-form').submit(function(e) {
+            var isValid = true;
+            
+            $(this).find('.is-invalid').removeClass('is-invalid');
+            
+            $(this).find('[required]').each(function() {
+                if (!$(this).val()) {
+                    $(this).addClass('is-invalid');
+                    isValid = false;
+                }
+            });
+            
+            var emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+            var email = $('#email').val();
+            if (email && !emailRegex.test(email)) {
+                $('#email').addClass('is-invalid');
+                isValid = false;
+            }
+            
+            if ($('#payment_card').is(':checked')) {
+                var cardFields = ['card_name', 'card_number', 'card_expiry_month', 'card_expiry_year', 'card_cvv'];
+                cardFields.forEach(function(field) {
+                    if (!$('#' + field).val()) {
+                        $('#' + field).addClass('is-invalid');
+                        isValid = false;
+                    }
+                });
+                
+                var cardNumber = $('#card_number').val().replace(/\s/g, '');
+                if (cardNumber && (!/^\d+$/.test(cardNumber) || cardNumber.length < 13 || cardNumber.length > 19)) {
+                    $('#card_number').addClass('is-invalid');
+                    isValid = false;
+                }
+                
+                var cvv = $('#card_cvv').val();
+                if (cvv && (!/^\d+$/.test(cvv) || cvv.length < 3 || cvv.length > 4)) {
+                    $('#card_cvv').addClass('is-invalid');
+                    isValid = false;
+                }
+            }
+            
+            if (!isValid) {
+                e.preventDefault();
+                $('html, body').animate({
+                    scrollTop: $('.is-invalid:first').offset().top - 100
+                }, 500);
+            }
+        });
+    });
+</script>
+{% endblock %}

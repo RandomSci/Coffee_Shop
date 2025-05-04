@@ -1,0 +1,260 @@
+{% extends "base.html" %}
+
+{% block title %}Shopping Cart - AJ's Coffee Buster{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<section class="page-header bg-light py-4">
+    <div class="container">
+        <h1 class="mb-0">Shopping Cart</h1>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb bg-transparent p-0">
+                <li class="breadcrumb-item"><a href="{{ url_for('routes.index') }}">Home</a></li>
+                <li class="breadcrumb-item active">Cart</li>
+            </ol>
+        </nav>
+    </div>
+</section>
+
+<!-- Cart Content -->
+<section class="py-5">
+    <div class="container">
+        {% if cart_items %}
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="card">
+                        <div class="card-header bg-white">
+                            <h4 class="mb-0">Cart Items ({{ cart_totals.item_count }})</h4>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table table-hover mb-0">
+                                    <thead class="bg-light">
+                                        <tr>
+                                            <th class="border-0">Product</th>
+                                            <th class="border-0">Price</th>
+                                            <th class="border-0">Quantity</th>
+                                            <th class="border-0">Subtotal</th>
+                                            <th class="border-0"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for item in cart_items %}
+                                            <tr class="cart-item" data-product-id="{{ item.product_id }}">
+                                                <td>
+                                                    <div class="d-flex align-items-center">
+                                                        <img src="{{ item.image_url }}" alt="{{ item.name }}" class="cart-item-image mr-3">
+                                                        <div>
+                                                            <h6 class="mb-0">{{ item.name }}</h6>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td>{{ format_currency(item.price) }}</td>
+                                                <td>
+                                                    <div class="input-group quantity-selector">
+                                                        <div class="input-group-prepend">
+                                                            <button type="button" class="btn btn-outline-secondary btn-sm quantity-down">
+                                                                <i class="fas fa-minus"></i>
+                                                            </button>
+                                                        </div>
+                                                        <input type="number" class="form-control text-center quantity-input" 
+                                                               value="{{ item.quantity }}" min="1" max="10"
+                                                               data-product-id="{{ item.product_id }}">
+                                                        <div class="input-group-append">
+                                                            <button type="button" class="btn btn-outline-secondary btn-sm quantity-up">
+                                                                <i class="fas fa-plus"></i>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td class="item-subtotal">{{ format_currency(item.subtotal) }}</td>
+                                                <td>
+                                                    <button type="button" class="btn btn-sm btn-outline-danger remove-item" 
+                                                            data-product-id="{{ item.product_id }}">
+                                                        <i class="fas fa-trash-alt"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-white">
+                            <div class="d-flex justify-content-between">
+                                <a href="{{ url_for('routes.shop') }}" class="btn btn-outline-primary">
+                                    <i class="fas fa-arrow-left mr-2"></i> Continue Shopping
+                                </a>
+                                <button id="update-cart-btn" class="btn btn-secondary">
+                                    <i class="fas fa-sync-alt mr-2"></i> Update Cart
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 mt-4 mt-lg-0">
+                    <div class="card">
+                        <div class="card-header bg-white">
+                            <h4 class="mb-0">Order Summary</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between mb-3">
+                                <span>Subtotal</span>
+                                <span id="cart-subtotal">{{ format_currency(cart_totals.subtotal) }}</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-3">
+                                <span>Tax (7%)</span>
+                                <span id="cart-tax">{{ format_currency(cart_totals.tax) }}</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-3">
+                                <span>Shipping</span>
+                                <span>Free</span>
+                            </div>
+                            <hr>
+                            <div class="d-flex justify-content-between mb-3">
+                                <strong>Total</strong>
+                                <strong id="cart-total">{{ format_currency(cart_totals.total) }}</strong>
+                            </div>
+                            <a href="{{ url_for('routes.checkout') }}" class="btn btn-primary btn-block">
+                                Proceed to Checkout
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <div class="text-center py-5">
+                <div class="mb-4">
+                    <i class="fas fa-shopping-cart fa-4x text-muted"></i>
+                </div>
+                <h2>Your Cart is Empty</h2>
+                <p class="lead">Looks like you haven't added any products to your cart yet.</p>
+                <a href="{{ url_for('routes.shop') }}" class="btn btn-primary mt-3">
+                    Start Shopping
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .cart-item-image {
+        width: 60px;
+        height: 60px;
+        object-fit: cover;
+        border-radius: 4px;
+    }
+    
+    .quantity-selector {
+        width: 120px;
+    }
+    
+    .cart-item {
+        vertical-align: middle;
+    }
+    
+    .page-header {
+        background-color: #f8f9fa;
+        border-bottom: 1px solid #e9ecef;
+    }
+    
+    .breadcrumb {
+        margin-bottom: 0;
+    }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    $(document).ready(function() {
+        $('.quantity-up').click(function() {
+            var input = $(this).closest('.quantity-selector').find('input');
+            var value = parseInt(input.val());
+            var max = parseInt(input.attr('max'));
+            
+            if (value < max) {
+                input.val(value + 1);
+                updateItemQuantity(input);
+            }
+        });
+        
+        $('.quantity-down').click(function() {
+            var input = $(this).closest('.quantity-selector').find('input');
+            var value = parseInt(input.val());
+            
+            if (value > 1) {
+                input.val(value - 1);
+                updateItemQuantity(input);
+            }
+        });
+        
+        $('.quantity-input').change(function() {
+            updateItemQuantity($(this));
+        });
+        
+        function updateItemQuantity(input) {
+            var productId = input.data('product-id');
+            var quantity = parseInt(input.val());
+            
+            if (quantity < 1) {
+                input.val(1);
+                quantity = 1;
+            }
+            
+            $.ajax({
+                url: '{{ url_for("routes.update_cart") }}',
+                method: 'POST',
+                data: {
+                    product_id: productId,
+                    quantity: quantity
+                },
+                success: function(response) {
+                    input.closest('tr').find('.item-subtotal').text(response.item_subtotal);
+                    
+                    $('#cart-subtotal').text(response.subtotal);
+                    $('#cart-tax').text(response.tax);
+                    $('#cart-total').text(response.total);
+                    
+                    $('.cart-count').text(response.item_count);
+                }
+            });
+        }
+        
+        $('.remove-item').click(function() {
+            var productId = $(this).data('product-id');
+            var row = $(this).closest('tr');
+            
+            $.ajax({
+                url: '{{ url_for("routes.remove_from_cart") }}',
+                method: 'POST',
+                data: {
+                    product_id: productId
+                },
+                success: function(response) {
+                    row.fadeOut(300, function() {
+                        $(this).remove();
+                        
+                        if ($('.cart-item').length === 0) {
+                            location.reload();
+                        }
+                    });
+                    
+                    $('#cart-subtotal').text(response.subtotal);
+                    $('#cart-tax').text(response.tax);
+                    $('#cart-total').text(response.total);
+                    
+                    $('.cart-count').text(response.item_count);
+                }
+            });
+        });
+        
+        $('#update-cart-btn').click(function() {
+            $('.quantity-input').each(function() {
+                updateItemQuantity($(this));
+            });
+        });
+    });
+</script>
+{% endblock %}  
