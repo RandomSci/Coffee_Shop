@@ -3,8 +3,7 @@
 {% block title %}AJ's Coffee Buster - Premium Coffee Shop{% endblock %}
 
 {% block content %}
-<!-- Hero Banner -->
-<section class="hero-banner" style="background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('{{ url_for('static', filename='images/banner-bg.jpg') }}');">
+<section class="hero-banner" style="background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('/static/images/banner-bg.jpg');">
     <div class="container">
         <div class="row align-items-center min-vh-75">
             <div class="col-lg-6 text-white">
@@ -20,7 +19,6 @@
     </div>
 </section>
 
-<!-- Featured Products -->
 <section class="py-5">
     <div class="container">
         <h2 class="text-center mb-4">OUR SIGNATURE COFFEES</h2>
@@ -55,7 +53,6 @@
     </div>
 </section>
 
-<!-- Coffee Categories -->
 <section class="py-5 bg-light">
     <div class="container">
         <h2 class="text-center mb-4">COFFEE BY CATEGORY</h2>
@@ -82,7 +79,6 @@
     </div>
 </section>
 
-<!-- About Section -->
 <section class="py-5">
     <div class="container">
         <div class="row align-items-center">
@@ -100,7 +96,6 @@
     </div>
 </section>
 
-<!-- Newsletter -->
 <section class="py-5 bg-primary text-white">
     <div class="container">
         <div class="row justify-content-center">
