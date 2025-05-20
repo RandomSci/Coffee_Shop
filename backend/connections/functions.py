@@ -6,8 +6,8 @@ import os
 def format_currency(amount):
     """Format a number as currency"""
     if amount is None:
-        return "$0.00"
-    return f"${float(amount):.2f}"
+        return "₱0.00"
+    return f"₱{float(amount):.2f}"
 
 def format_date(date_str):
     """Format a date string"""
